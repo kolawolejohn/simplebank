@@ -31,4 +31,13 @@ server:
 mock:
 	mockgen --build_flags=--mod=mod -package mockdb  -destination db/mock/store.go  github.com/kolawolejohn/simplebank/db/sqlc Store
 
-.PHONY: postgres createdb dropdb migrateup migratedown migrateup1 migratedown1 sqlc test server mock
+dockerbuild:
+	docker build -t simplebank:latest .
+
+dockerrun:
+	docker run --name simplebank -p 8080:8080 simplebank:latest
+
+dockerlatetrun:
+	docker run --name simplebank --network bank-network -p 8080:8080 -e GIN_MODE=release -e DB_SOURCE="postgresql://root:12345678@postgres12:5432/simple_bank?sslmode=disable" simplebank:latest
+
+.PHONY: postgres createdb dropdb migrateup migratedown migrateup1 migratedown1 sqlc test server mock dockerbuild dockerrun
