@@ -1,3 +1,4 @@
 /vendor
 note.txt
 *.env
+*.log
